@@ -64,7 +64,8 @@ public final class VendingMachineView extends JPanel implements ActionListener, 
     buttons.add(Box.createVerticalStrut(100));
     addKeypadToUI(buttons);
     buttons.add(Box.createVerticalStrut(25));
-    //addCointReturnTray(buttons);
+    addReloadButtonToUI(buttons);
+
     addVendingMachineToUI(vendingView);
 
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -135,7 +136,6 @@ private void addScreentoUI(JPanel panel){
     //onto the panel later, such as a picture of a coin slot.
 
     JButton coinReturn = new JButton("COIN RETURN");
-    coinReturn.setActionCommand("1");
     coinReturn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
@@ -144,6 +144,22 @@ private void addScreentoUI(JPanel panel){
         });
     panel.add(coinReturn);
 }
+
+
+
+  private void addReloadButtonToUI(JPanel panel){
+    JButton reloadMachine = new JButton("ReloadMachine");
+    reloadMachine.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                controller.reloadMachine();
+            }
+        });
+    panel.add(reloadMachine);
+}
+
+
+
 
 
 private void addVendingMachineToUI(JPanel panel){

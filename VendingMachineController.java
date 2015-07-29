@@ -41,6 +41,20 @@ public class VendingMachineController {
 		model.setMachinePrices(productPrices);
     }
 
+	public void reloadMachine(){
+		int[] coins = {1000, 500, 200, 100, 50, 20, 10, 5};
+		// int[] coins = {1, 1, 0, 0, 0, 0, 0, 0}; less coins useful for testing of change giving
+		//Initially 10 of each item. 20 of the cheap itmes, 1 of each expensive one.
+		int[] products = {20, 20, 20, 20,
+						10, 10, 10, 10,
+						10, 10, 10, 10,
+						1, 1, 1, 1};
+
+		model.reloadMachineChange(coins);
+		model.reloadMachineProducts(products);
+
+	}
+
 
 
 
@@ -96,7 +110,9 @@ public class VendingMachineController {
 		else if(result == 0) view.UpdateScreen("Out of Stock. Credit:"+creditString);
 
 		else if(result <= -100 ){
- 			view.UpdateScreen("insufficient money. Cost:" + "\u00A3" + df.format(value)
+			double cost = (-1 * result) / 100.0;
+
+ 			view.UpdateScreen("insufficient money. Cost:" + "\u00A3" + df.format(cost)
 			+ ".Credit:" + creditString);
 		}
 		//else =  if(-100< result < 0)
