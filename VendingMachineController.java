@@ -20,12 +20,14 @@ public class VendingMachineController {
     public void populateMachine(){
 		//Initially 10pounds worth of each coin
 		int[] coins = {1000, 500, 200, 100, 50, 20, 10, 5};
-
-		//Initially 10 of each item. 20 of the cheap itmes
+		// int[] coins = {1, 1, 0, 0, 0, 0, 0, 0}; less coins useful for testing of change giving
+		//Initially 10 of each item. 20 of the cheap itmes, 1 of each expensive one.
 		int[] products = {20, 20, 20, 20,
 						10, 10, 10, 10,
 						10, 10, 10, 10,
-						10, 10, 10, 10};
+						1, 1, 1, 1};
+
+
 
 		model.initialMachineStock(coins, products);
 
@@ -59,12 +61,14 @@ public class VendingMachineController {
 
 		double value = credit / 100.0;
 		DecimalFormat df = new DecimalFormat("#0.00");
-		this.view.UpdateScreen("\u00A3"+df.format(value));
+		view.UpdateScreen("\u00A3"+df.format(value));
 	}
+
 
 
 	//returns the amount of change that should be returned.
 	public void madeChoiceOfItem(int choice){
+
 		int credit = model.currentCredit();
 
 		double value = credit / 100.0;
@@ -73,26 +77,33 @@ public class VendingMachineController {
 
 		if(model.getPositionOfProduct(choice) <0){
 			view.UpdateScreen("Invalid product selection. Credit" + creditString);
+			return;
 		}
-		else{
-			int result = model.userBuys(choice);
-			if (result==1){
-				view.DispenseProduct(choice);
-				returnCoins();
-			    view.UpdateScreen("Vending machine is ready.");
 
-			}
-			else if(result == 0) view.UpdateScreen("Out of Stock. Credit:"+creditString);
+		int result = model.userBuys(choice);
+		if(result == 2){
+			view.UpdateScreen("Please insert exact change!");
+			returnCoins();
+			return;
+		}
 
-			else if(result <= -100 ){
-	 			view.UpdateScreen("insufficient money. Cost:" + "\u00A3" + df.format(value)
-				+ ".Credit:" + creditString);
-			}
-			//else =  if(-100< result < 0)
-			else{ view.UpdateScreen("insufficient money. Cost:" + Integer.toString(-1 * result) + "p"
+		if (result==1){
+			view.DispenseProduct(choice);
+			returnCoins();
+		    view.UpdateScreen("Vending machine is ready.");
+
+		}
+		else if(result == 0) view.UpdateScreen("Out of Stock. Credit:"+creditString);
+
+		else if(result <= -100 ){
+ 			view.UpdateScreen("insufficient money. Cost:" + "\u00A3" + df.format(value)
 			+ ".Credit:" + creditString);
-			}
 		}
+		//else =  if(-100< result < 0)
+		else{ view.UpdateScreen("insufficient money. Cost:" + Integer.toString(-1 * result) + "p"
+		+ ".Credit:" + creditString);
+		}
+
 
 	}
 

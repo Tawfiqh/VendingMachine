@@ -105,7 +105,7 @@ public class VendingMachineModel {
 	public int[] returnCredit(){
 		int[] toReturn = new int[change.length];
 
-		for(int i = change.length-1; currentCredit>0||i>=0;i--){
+		for(int i = change.length-1; currentCredit>0 && i>=0;i--){
 			while(changeRemaining[i]>0 && change[i]<=currentCredit){
 				toReturn[i]++;
 				changeRemaining[i]--;
@@ -121,16 +121,24 @@ public class VendingMachineModel {
 // 							Purchasing Product credit
 //---------------------------------------------------------------------------------------------
 public int userBuys(int choice){
+	//returns: 2 = notEnough change
 	//returns: 1 = succesful
 	//returns: 0 = out of stock
 	//returns: <0 = insufficient funds
 
 	Product toBuy = getProductWithChoice(choice);
 
+
+
 	if(currentCredit>= toBuy.price && toBuy.stockLeft>0){
-		currentCredit-=toBuy.price;
-		toBuy.stockLeft--;
-		return 1;
+		if(couldGiveChangeAfterBuying(choice)){
+			currentCredit-=toBuy.price;
+			toBuy.stockLeft--;
+			return 1;
+		}
+		else{
+			return 2;
+		}
 	}
 
 	else{
@@ -140,5 +148,24 @@ public int userBuys(int choice){
 		}
 	}
 }
+
+public Boolean couldGiveChangeAfterBuying(int choice){
+	Product toBuy = getProductWithChoice(choice);
+
+	int newCredit = currentCredit - toBuy.price;
+	int[] tempChangeRemaining = new int[change.length];
+	System.arraycopy(changeRemaining, 0, tempChangeRemaining, 0, changeRemaining.length);
+
+	for(int i = change.length-1; newCredit>0 && i>=0; i--){
+		while(tempChangeRemaining[i]>0 && change[i]<=newCredit){
+			tempChangeRemaining[i]--;
+			newCredit-=change[i];
+		}
+	}
+
+	return newCredit == 0;
+
+	}
+
 
 }
