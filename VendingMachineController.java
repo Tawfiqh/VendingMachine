@@ -1,8 +1,22 @@
+import java.text.DecimalFormat;
+
 public class VendingMachineController {
 
-	// public  Boolean coinInserted(Coin coin);
-	public  Boolean coinInserted(int coinVal){
+	private VendingMachineViewInterface view;
+	private VendingMachineModel model;
+	public VendingMachineController(VendingMachineViewInterface view){
+		this.view = view;
+		model = new VendingMachineModel();
+	}
 
+	// public  Boolean coinInserted(Coin coin);
+	public Boolean coinInserted(int coinVal){
+		model.addCredit(coinVal);
+		int credit = model.currentCredit();
+
+		double value = credit / 100.0;
+	    DecimalFormat df = new DecimalFormat("#.00");
+		this.view.UpdateScreen("\u00A3"+df.format(value));
 		return true;
 	}
 
@@ -14,7 +28,6 @@ public class VendingMachineController {
 	}
 
 	public int[] coinReturnPressed(){
-		int[] ret = {};
-		return ret;
+		return model.returnCredit();
 	}
 }

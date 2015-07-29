@@ -21,13 +21,13 @@ import java.awt.GridLayout;
 
 //MinimalSwingUITemplate taken from - http://www.javapractices.com/topic/TopicAction.do?Id=231
 
-public final class VendingMachineView extends JPanel implements ActionListener{
+public final class VendingMachineView extends JPanel implements ActionListener, VendingMachineViewInterface{
     private static VendingMachineController controller;
 
 
     public static void main(String... aArgs){
         VendingMachineView app = new VendingMachineView();
-        controller = new VendingMachineController();
+        controller = new VendingMachineController(app);
         populateMachine();
 
         app.buildAndDisplayGui();
@@ -39,7 +39,7 @@ public final class VendingMachineView extends JPanel implements ActionListener{
 
 
 
-  // PRIVATE
+
   private void buildAndDisplayGui(){
     JFrame frame = new JFrame("Vending Machine");
     frame.setPreferredSize(new Dimension(900, 600));
@@ -75,9 +75,6 @@ JLabel screen;
 private void addScreen(JPanel panel){
     screen = new JLabel("Goodday. Vending machine is ready to vend.");
     screen.setBorder(BorderFactory.createLineBorder(Color.black, 2));
-
-    // screen.setFont(new Font(screen.getFont().getName(), Font.PLAIN, 16));
-
     panel.add(screen);
 }
 
@@ -140,7 +137,6 @@ public void actionPerformed(ActionEvent e) {
     if(buttonID.charAt(0)=='c'){
     String coin = buttonID.substring(4);
     int val = Integer.parseInt(coin);
-    JOptionPane.showMessageDialog(null, "My Goodness, this is:"+ coin);
     controller.coinInserted(val);
     }
 
@@ -222,25 +218,13 @@ private void addKeypad(JPanel panel){
         panel.add(keyPanel);
 }
 
+public void UpdateScreen(String message){
+    screen.setText(message);
+}
+
+public void DispenseProduct(String product){
+
+}
 
 
-  // private void buildContent(JFrame aFrame){
-  //   JPanel panel = new JPanel();
-  //   panel.add(new JLabel("Hello"));
-  //   JButton ok = new JButton("OK");
-  //   ok.addActionListener(new ShowDialog(aFrame));
-  //   panel.add(ok);
-  //   aFrame.getContentPane().add(panel);
-  // }
-
-  // private static final class ShowDialog implements ActionListener {
-  //   /** Defining the dialog's owner JFrame is highly recommended. */
-  //   ShowDialog(JFrame aFrame){
-  //     fFrame = aFrame;
-  //   }
-  //   @Override public void actionPerformed(ActionEvent aEvent) {
-  //     JOptionPane.showMessageDialog(fFrame, "This is a dialog");
-  //   }
-  //   private JFrame fFrame;
-  // }
 }

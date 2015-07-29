@@ -1,8 +1,5 @@
 Todo:
 =====
-Layout
-Add screen
-Resize large picture
 
 
 Coins with picture background.
