@@ -118,7 +118,7 @@ public class VendingMachineModel {
 
 
 //---------------------------------------------------------------------------------------------
-// 							Purchasing Product credit
+// 							Purchasing an item
 //---------------------------------------------------------------------------------------------
 public int userBuys(int choice){
 	//returns: 2 = notEnough change

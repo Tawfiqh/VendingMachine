@@ -70,14 +70,6 @@ public class VendingMachineController {
 		return true;
 	}
 
-	private void updateScreenWithCurrentCredit(){
-		int credit = model.currentCredit();
-
-		double value = credit / 100.0;
-		DecimalFormat df = new DecimalFormat("#0.00");
-		view.UpdateScreen("\u00A3"+df.format(value));
-	}
-
 
 
 	//returns the amount of change that should be returned.
@@ -140,5 +132,15 @@ public class VendingMachineController {
 		return model.change;
 
 	}
+
+
+	private void updateScreenWithCurrentCredit(){
+		int credit = model.currentCredit();
+
+		double value = credit / 100.0;
+		DecimalFormat df = new DecimalFormat("#0.00");
+		view.UpdateScreen("\u00A3"+df.format(value));
+	}
+
 
 }
