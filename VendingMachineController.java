@@ -64,28 +64,34 @@ public class VendingMachineController {
 
 
 	//returns the amount of change that should be returned.
-	public Boolean madeChoiceOfItem(int choice){
+	public void madeChoiceOfItem(int choice){
+		int credit = model.currentCredit();
 
+		double value = credit / 100.0;
+		DecimalFormat df = new DecimalFormat("#0.00");
+		String creditString = "\u00A3"+df.format(value);
 
 		if(model.getPositionOfProduct(choice) <0){
-			view.UpdateScreen("Invalid product selection.");
-			return false;
+			view.UpdateScreen("Invalid product selection. Credit" + creditString);
 		}
 		else{
-		//returns true iff succesful.
 			int result = model.userBuys(choice);
-			if (result==1) return true;
-			if(result == 0) view.UpdateScreen("Out of Stock.");
-
-			if(result <= -100 ){
-				double value = (-1*result) / 100.0;
-				DecimalFormat df = new DecimalFormat("#0.00");
-	 			view.UpdateScreen("insufficient money. Cost:" + "\u00A3" + df.format(value));
+			if (result==1){
+				view.DispenseProduct(choice);
+				returnCoins();
+			    view.UpdateScreen("Vending machine is ready.");
 
 			}
+			else if(result == 0) view.UpdateScreen("Out of Stock. Credit:"+creditString);
+
+			else if(result <= -100 ){
+	 			view.UpdateScreen("insufficient money. Cost:" + "\u00A3" + df.format(value)
+				+ ".Credit:" + creditString);
+			}
 			//else =  if(-100< result < 0)
-			else{ view.UpdateScreen("insufficient money. Cost:" + Integer.toString(-1 * result) + "p");}
-			return false;
+			else{ view.UpdateScreen("insufficient money. Cost:" + Integer.toString(-1 * result) + "p"
+			+ ".Credit:" + creditString);
+			}
 		}
 
 	}
@@ -95,41 +101,17 @@ public class VendingMachineController {
 // 							Returning Change
 //---------------------------------------------------------------------------------------------
 
-	public String coinReturnPressed(){
-
-		int[] change = model.returnCredit();
-
-		String changeStr = "";
-		int totalReturn = 0;
-		for(int i = 0; i<model.change.length; i++ ){
-			int noOfThisCoin = change[i];
-			if(noOfThisCoin>0){
-				int thisCoin = model.change[i];
-				int val = noOfThisCoin * thisCoin;
-
-				totalReturn += val;
-				if(thisCoin<100){
-					changeStr += Integer.toString(noOfThisCoin) + " x " + thisCoin+ "p.\n";
-				}
-
-				else{
-					changeStr += Integer.toString(noOfThisCoin) + " x \u00A3" + thisCoin/100+ "\n";
-				}
-			}
-		}
-
-
-		double value = totalReturn / 100.0;
-	    DecimalFormat df = new DecimalFormat("#0.00");
-		changeStr+="total = " + "\u00A3" + df.format(value);
-
-		updateScreenWithCurrentCredit();
-		if(totalReturn==0) return "";
-		return changeStr;
+	public void returnCoins(){
+		view.GiveChange(model.returnCredit());
 	}
 
 	public String nameOfProductWithChoice(int choice){
 		return model.getNameOfProductWithChoice(choice);
+	}
+
+	public int[] change(){
+		return model.change;
+
 	}
 
 }

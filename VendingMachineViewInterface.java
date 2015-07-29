@@ -4,5 +4,6 @@ public interface VendingMachineViewInterface{
 
       void UpdateScreen(String message);
       void DispenseProduct(int product);
+      void GiveChange(int[] change);
 
    }

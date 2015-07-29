@@ -16,6 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import java.awt.Color;
 import java.awt.Font;
+import java.text.DecimalFormat;
 
 import java.awt.GridLayout;
 
@@ -54,17 +55,17 @@ public final class VendingMachineView extends JPanel implements ActionListener, 
     frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
 
     buttons.add(Box.createVerticalStrut(40));
-    addScreen(buttons);
+    addScreentoUI(buttons);
     buttons.add(Box.createVerticalStrut(40));
-    addCoinButtons(buttons);
+    addCoinButtonsToUI(buttons);
     buttons.add(Box.createVerticalStrut(20));
-    addCoinReturnAndSlot(buttons);
+    addCoinReturnAndSlotToUI(buttons);
 
     buttons.add(Box.createVerticalStrut(100));
-    addKeypad(buttons);
+    addKeypadToUI(buttons);
     buttons.add(Box.createVerticalStrut(25));
     //addCointReturnTray(buttons);
-    addVendingMachine(vendingView);
+    addVendingMachineToUI(vendingView);
 
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.pack();
@@ -73,13 +74,13 @@ public final class VendingMachineView extends JPanel implements ActionListener, 
 
 
 JLabel screen;
-private void addScreen(JPanel panel){
+private void addScreentoUI(JPanel panel){
     screen = new JLabel("Vending machine is ready.");
     screen.setBorder(BorderFactory.createLineBorder(Color.black, 2));
     panel.add(screen);
 }
 
-  private void addCoinButtons(JPanel panel){
+  private void addCoinButtonsToUI(JPanel panel){
     JPanel coinPanel = new JPanel();
     coinPanel.setPreferredSize(new Dimension(350, 10));
     coinPanel.setLayout(new GridLayout(2, 4));
@@ -129,7 +130,7 @@ private void addScreen(JPanel panel){
 
 }
 
-  private void addCoinReturnAndSlot(JPanel panel){
+  private void addCoinReturnAndSlotToUI(JPanel panel){
     //we use a panel here in case we want to add more things
     //onto the panel later, such as a picture of a coin slot.
 
@@ -138,15 +139,14 @@ private void addScreen(JPanel panel){
     coinReturn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
-                String change = controller.coinReturnPressed();
-                if(!change.equals("")) JOptionPane.showMessageDialog(null, "Returning these coins:\n"+ change);
+                controller.returnCoins();
             }
         });
     panel.add(coinReturn);
 }
 
 
-private void addVendingMachine(JPanel panel){
+private void addVendingMachineToUI(JPanel panel){
     String IMG_PATH = "./machine.jpg";
     try{
     BufferedImage img = ImageIO.read(new File(IMG_PATH));
@@ -158,7 +158,7 @@ private void addVendingMachine(JPanel panel){
     }
 }
 
-private void addKeypad(JPanel panel){
+private void addKeypadToUI(JPanel panel){
         JLabel label = new JLabel("Keypad");
         panel.add(label);
 
@@ -208,10 +208,13 @@ public void actionPerformed(ActionEvent e) {
     controller.coinInserted(val);
     }
 
-    //Food selection.
+    //Product selection.
     else{
         int keyPressed = Integer.parseInt(buttonID);
-        if(keyPressed==-1){ firstPressed=-1;}
+        if(keyPressed==-1){ firstPressed=-1;
+            String message = "Current Selection: "+"__";
+            UpdateScreen(message);
+        }
         else{
             if(firstPressed == -1){
                 firstPressed = Integer.parseInt(buttonID);
@@ -220,9 +223,9 @@ public void actionPerformed(ActionEvent e) {
             }
             else{
                 int choice = (firstPressed*10) + Integer.parseInt(buttonID);
-                String message = "Current Selection: " + choice;
+                String message = "Current Selection: "+choice;
                 UpdateScreen(message);
-                if(controller.madeChoiceOfItem(choice)) DispenseProduct(choice);
+                controller.madeChoiceOfItem(choice);
                 firstPressed = -1;
             }
         }
@@ -244,12 +247,38 @@ public void UpdateScreen(String message){
 
 public void DispenseProduct(int product){
     String name = controller.nameOfProductWithChoice(product);
-    JOptionPane.showMessageDialog(null, "Outputting item:"+ product);
-
+    JOptionPane.showMessageDialog(null, "Outputting item:"+ name);
     //in this case this is equivalent to "Outputting item:"+ product);
+}
 
-    String change = controller.coinReturnPressed();
-    if(!change.equals("")) JOptionPane.showMessageDialog(null, "Returning these coins:\n"+ change);
+public void GiveChange(int[] change){
+
+    String changeStr = "";
+    int totalReturn = 0;
+    for(int i = 0; i<controller.change().length; i++ ){
+        int noOfThisCoin = change[i];
+        if(noOfThisCoin>0){
+            int thisCoin = controller.change()[i];
+            int val = noOfThisCoin * thisCoin;
+
+            totalReturn += val;
+            if(thisCoin<100){
+                changeStr += Integer.toString(noOfThisCoin) + " x " + thisCoin+ "p.\n";
+            }
+
+            else{
+                changeStr += Integer.toString(noOfThisCoin) + " x \u00A3" + thisCoin/100+ "\n";
+            }
+        }
+    }
+
+    double value = totalReturn / 100.0;
+    DecimalFormat df = new DecimalFormat("#0.00");
+    changeStr+="total = " + "\u00A3" + df.format(value);
+
+    if(totalReturn==0) changeStr = "";
+    if(!changeStr.equals("")) JOptionPane.showMessageDialog(null, "Returning these coins:\n"+ changeStr);
+    UpdateScreen("Vending machine is ready.");
 
 }
 

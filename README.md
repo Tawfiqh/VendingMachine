@@ -1,3 +1,9 @@
+Instructions for running
+========================
+run $ make
+and then
+$./launchVendingMachine
+
 Vending Machine Notes
 ======================
 Application

@@ -1,12 +1,12 @@
 all: model view controller
 
 
-model:
+model: VendingMachineModel.java
 	javac VendingMachineModel.java
 
-controller:
+controller: VendingMachineController.java
 	javac VendingMachineController.java
 
-view:
+view: VendingMachineView.java
 	javac VendingMachineView.java
 	java VendingMachineView
