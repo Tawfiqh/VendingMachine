@@ -36,6 +36,10 @@ public final class VendingMachineView extends JPanel implements ActionListener, 
 
 
 
+//---------------------------------------------------------------------------------------------
+// 							Setup GUI
+//---------------------------------------------------------------------------------------------
+
 
   private void buildAndDisplayGui(){
     JFrame frame = new JFrame("Vending Machine");
@@ -125,36 +129,6 @@ private void addScreen(JPanel panel){
 
 }
 
-
-private int firstPressed;
-public void actionPerformed(ActionEvent e) {
-    String buttonID = e.getActionCommand();
-
-    //Coin Input
-    if(buttonID.charAt(0)=='c'){
-    String coin = buttonID.substring(4);
-    int val = Integer.parseInt(coin);
-    controller.coinInserted(val);
-    }
-
-    //Food selection.
-    else{
-        int keyPressed = Integer.parseInt(buttonID);
-        if(keyPressed==-1){ firstPressed=-1;}
-        else{
-            if(firstPressed == -1){firstPressed = Integer.parseInt(buttonID);}
-            else{
-                int choice = (firstPressed*10) + Integer.parseInt(buttonID);
-                JOptionPane.showMessageDialog(null, "User chose:"+ choice);
-                controller.madeChoiceOfItem(choice);
-                firstPressed = -1;
-            }
-        }
-    }
-
-}
-
-
   private void addCoinReturnAndSlot(JPanel panel){
     //we use a panel here in case we want to add more things
     //onto the panel later, such as a picture of a coin slot.
@@ -215,9 +189,63 @@ private void addKeypad(JPanel panel){
         panel.add(keyPanel);
 }
 
+
+
+
+//---------------------------------------------------------------------------------------------
+// 							Handling Actions from buttons
+//---------------------------------------------------------------------------------------------
+
+
+private int firstPressed;
+public void actionPerformed(ActionEvent e) {
+    String buttonID = e.getActionCommand();
+
+    //Coin Input
+    if(buttonID.charAt(0)=='c'){
+    String coin = buttonID.substring(4);
+    int val = Integer.parseInt(coin);
+    controller.coinInserted(val);
+    }
+
+    //Food selection.
+    else{
+        int keyPressed = Integer.parseInt(buttonID);
+        if(keyPressed==-1){ firstPressed=-1;}
+        else{
+            if(firstPressed == -1){
+                firstPressed = Integer.parseInt(buttonID);
+                String message = "Current Selection: "+buttonID +"_";
+                UpdateScreen(message);
+            }
+            else{
+                int choice = (firstPressed*10) + Integer.parseInt(buttonID);
+                String message = "Current Selection: " + choice;
+                UpdateScreen(message);
+                controller.madeChoiceOfItem(choice);
+                firstPressed = -1;
+            }
+        }
+    }
+
+}
+
+
+
+//---------------------------------------------------------------------------------------------
+// 							Updating the screen
+//---------------------------------------------------------------------------------------------
+
+
 public void UpdateScreen(String message){
     screen.setText(message);
 }
+
+
+//---------------------------------------------------------------------------------------------
+// 							Dispensing product
+//---------------------------------------------------------------------------------------------
+
 
 public void DispenseProduct(String product){
 

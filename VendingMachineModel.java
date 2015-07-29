@@ -101,6 +101,7 @@ public class VendingMachineModel {
 		for(int i = change.length-1; currentCredit>0||i>=0;i--){
 			while(changeRemaining[i]>0 && change[i]<=currentCredit){
 				toReturn[i]++;
+				changeRemaining[i]--;
 				currentCredit-=change[i];
 			}
 		}
