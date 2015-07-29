@@ -233,18 +233,13 @@ public void actionPerformed(ActionEvent e) {
 
 
 //---------------------------------------------------------------------------------------------
-// 							Updating the screen
+// 							Implementing VendingMachineViewInterface
 //---------------------------------------------------------------------------------------------
 
 
 public void UpdateScreen(String message){
     screen.setText(message);
 }
-
-
-//---------------------------------------------------------------------------------------------
-// 							Dispensing product
-//---------------------------------------------------------------------------------------------
 
 
 public void DispenseProduct(int product){
