@@ -24,10 +24,10 @@ public class VendingMachineModel {
 									41, 42, 43, 44};
 
 	private int[] changeRemaining;
-	private int[] change = {1, 2, 5, 10, 20, 50, 100, 200};
+	public int[] change = {1, 2, 5, 10, 20, 50, 100, 200};
 
 
-	private int getPositionOfCoin(int coin){
+	public int getPositionOfCoin(int coin){
 		//to find out how many 2p pieces we have left
 		//we need to find which index of the array "changeRemaining"
 		//refers to 2p pieces.
@@ -37,8 +37,42 @@ public class VendingMachineModel {
 		return Arrays.binarySearch(change, coin);
 	}
 
-	private int getPositionOfProduct(int product){
+	public int getPositionOfProduct(int product){
 		return Arrays.binarySearch(productNumbers, product);
+	}
+
+
+//---------------------------------------------------------------------------------------------
+// 							Setting up THE MACHINE.
+//---------------------------------------------------------------------------------------------
+	public void initialMachineStock(int[] changeInserted, int[] productsInserted){
+		changeRemaining = changeInserted;
+		products = new Product[productsInserted.length];
+
+		for(int i=0; i<productsInserted.length; i++){
+			//initial prices are 0, prices set separately afterwards.
+			products[i] = new Product(Integer.toString(productNumbers[i]), 0, productsInserted[i]);
+		}
+	}
+
+	public void setMachinePrices(int[] prices){
+		for(int i=0; i<productNumbers.length; i++){
+			Product item = products[i];
+			products[i] = new Product(item.name, prices[i], item.stockLeft);
+		}
+	}
+
+	public void reloadMachineChange(int[] changeInserted){
+		for(int i=0; i<change.length; i++){
+			changeRemaining[i]+=changeInserted[i];
+		}
+	}
+
+	public void reloadMachineProducts(int[] productsInserted){
+		for(int i=0; i<productNumbers.length; i++){
+			Product item = products[i];
+			products[i] = new Product(item.name, item.price, item.stockLeft + productsInserted[i]);
+		}
 	}
 
 
@@ -62,9 +96,9 @@ public class VendingMachineModel {
 	}
 
 	public int[] returnCredit(){
-		int[] toReturn = New int[change.length];
+		int[] toReturn = new int[change.length];
 
-		for(int i = change.length; currentCredit>0||i>=0;i--){
+		for(int i = change.length-1; currentCredit>0||i>=0;i--){
 			while(changeRemaining[i]>0 && change[i]<=currentCredit){
 				toReturn[i]++;
 				currentCredit-=change[i];
@@ -76,36 +110,6 @@ public class VendingMachineModel {
 
 
 
-//---------------------------------------------------------------------------------------------
-// 							Setting up THE MACHINE.
-//---------------------------------------------------------------------------------------------
-	public void initialMachineStock(int[] changeInserted, int[] productsInserted){
-		changeRemaining = changeInserted;
 
-		for(int i=0; i<productNumbers.length; i++){
-			//initial prices are 0, prices set separately afterwards.
-			products[i] = new Product(Integer.toString(productNumbers[i]), 0, productsInserted[i]);
-		}
-
-	}
-
-	public void reloadMachineChange(int[] changeInserted){
-
-	}
-
-	public void reloadMachineProducts(int[] productsInserted){
-		for(int i=0; i<productNumbers.length; i++){
-			Product item = products[i];
-			products[i] = new Product(item.name, item.prices, item.stockLeft + productsInserted[i]);
-		}
-	}
-
-
-	public void setMachinePrices(int[] prices){
-		for(int i=0; i<productNumbers.length; i++){
-			Product item = products[i];
-			products[i] = new Product(item.name, prices[i], item.stockLeft);
-		}
-	}
 
 }

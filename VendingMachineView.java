@@ -28,14 +28,11 @@ public final class VendingMachineView extends JPanel implements ActionListener, 
     public static void main(String... aArgs){
         VendingMachineView app = new VendingMachineView();
         controller = new VendingMachineController(app);
-        populateMachine();
+        controller.populateMachine();
 
         app.buildAndDisplayGui();
     }
 
-    private static void populateMachine(){
-
-    }
 
 
 
@@ -73,7 +70,7 @@ public final class VendingMachineView extends JPanel implements ActionListener, 
 
 JLabel screen;
 private void addScreen(JPanel panel){
-    screen = new JLabel("Goodday. Vending machine is ready to vend.");
+    screen = new JLabel("Vending machine is ready.");
     screen.setBorder(BorderFactory.createLineBorder(Color.black, 2));
     panel.add(screen);
 }
@@ -167,8 +164,8 @@ public void actionPerformed(ActionEvent e) {
     coinReturn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
-                int[] change = controller.coinReturnPressed();
-                System.out.println("Returning these coins");
+                String change = controller.coinReturnPressed();
+                JOptionPane.showMessageDialog(null, "Returning these coins:\n"+ change);
             }
         });
     panel.add(coinReturn);
