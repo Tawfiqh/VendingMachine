@@ -66,7 +66,28 @@ public class VendingMachineController {
 	//returns the amount of change that should be returned.
 	public Boolean madeChoiceOfItem(int choice){
 
-		return true;
+
+		if(model.getPositionOfProduct(choice) <0){
+			view.UpdateScreen("Invalid product selection.");
+			return false;
+		}
+		else{
+		//returns true iff succesful.
+			int result = model.userBuys(choice);
+			if (result==1) return true;
+			if(result == 0) view.UpdateScreen("Out of Stock.");
+
+			if(result <= -100 ){
+				double value = (-1*result) / 100.0;
+				DecimalFormat df = new DecimalFormat("#0.00");
+	 			view.UpdateScreen("insufficient money. Cost:" + "\u00A3" + df.format(value));
+
+			}
+			//else =  if(-100< result < 0)
+			else{ view.UpdateScreen("insufficient money. Cost:" + Integer.toString(-1 * result) + "p");}
+			return false;
+		}
+
 	}
 
 
@@ -103,7 +124,12 @@ public class VendingMachineController {
 		changeStr+="total = " + "\u00A3" + df.format(value);
 
 		updateScreenWithCurrentCredit();
+		if(totalReturn==0) return "";
 		return changeStr;
+	}
+
+	public String nameOfProductWithChoice(int choice){
+		return model.getNameOfProductWithChoice(choice);
 	}
 
 }

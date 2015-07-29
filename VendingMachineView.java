@@ -139,7 +139,7 @@ private void addScreen(JPanel panel){
             public void actionPerformed(ActionEvent e)
             {
                 String change = controller.coinReturnPressed();
-                JOptionPane.showMessageDialog(null, "Returning these coins:\n"+ change);
+                if(!change.equals("")) JOptionPane.showMessageDialog(null, "Returning these coins:\n"+ change);
             }
         });
     panel.add(coinReturn);
@@ -222,7 +222,7 @@ public void actionPerformed(ActionEvent e) {
                 int choice = (firstPressed*10) + Integer.parseInt(buttonID);
                 String message = "Current Selection: " + choice;
                 UpdateScreen(message);
-                controller.madeChoiceOfItem(choice);
+                if(controller.madeChoiceOfItem(choice)) DispenseProduct(choice);
                 firstPressed = -1;
             }
         }
@@ -247,7 +247,14 @@ public void UpdateScreen(String message){
 //---------------------------------------------------------------------------------------------
 
 
-public void DispenseProduct(String product){
+public void DispenseProduct(int product){
+    String name = controller.nameOfProductWithChoice(product);
+    JOptionPane.showMessageDialog(null, "Outputting item:"+ product);
+
+    //in this case this is equivalent to "Outputting item:"+ product);
+
+    String change = controller.coinReturnPressed();
+    if(!change.equals("")) JOptionPane.showMessageDialog(null, "Returning these coins:\n"+ change);
 
 }
 

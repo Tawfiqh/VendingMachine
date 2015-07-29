@@ -41,7 +41,14 @@ public class VendingMachineModel {
 		return Arrays.binarySearch(productNumbers, product);
 	}
 
+	public Product getProductWithChoice(int choice){
+		int index = getPositionOfProduct(choice);
+		return products[index];
+	}
 
+	public String getNameOfProductWithChoice(int choice){
+		return getProductWithChoice(choice).name;
+	}
 //---------------------------------------------------------------------------------------------
 // 							Setting up THE MACHINE.
 //---------------------------------------------------------------------------------------------
@@ -110,7 +117,28 @@ public class VendingMachineModel {
 	}
 
 
+//---------------------------------------------------------------------------------------------
+// 							Purchasing Product credit
+//---------------------------------------------------------------------------------------------
+public int userBuys(int choice){
+	//returns: 1 = succesful
+	//returns: 0 = out of stock
+	//returns: <0 = insufficient funds
 
+	Product toBuy = getProductWithChoice(choice);
 
+	if(currentCredit>= toBuy.price && toBuy.stockLeft>0){
+		currentCredit-=toBuy.price;
+		toBuy.stockLeft--;
+		return 1;
+	}
+
+	else{
+		if(toBuy.stockLeft==0) return 0;
+		else{//in stock but insufficient credit.
+			return -1 * toBuy.price;
+		}
+	}
+}
 
 }
